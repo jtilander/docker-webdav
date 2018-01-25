@@ -1,6 +1,7 @@
 FROM alpine:3.7
 
 ENV NGINX_VERSION 1.13.8
+ENV WEBDAV_EXT_SHA 430fd774fe838a04f1a5defbf1dd571d42300cf9
 
 RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& CONFIG="\
@@ -47,7 +48,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 		--with-compat \
 		--with-file-aio \
 		--with-http_v2_module \
-		--add-module=/usr/src/nginx-dav-ext-module-master \
+		--add-module=/usr/src/nginx-dav-ext-module \
 	" \
 	&& addgroup -S nginx \
 	&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
@@ -85,9 +86,10 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& mkdir -p /usr/src \
 	&& tar -zxC /usr/src -f nginx.tar.gz \
 	&& rm nginx.tar.gz \
-	&& curl -fSsL https://codeload.github.com/arut/nginx-dav-ext-module/zip/master -o /usr/src/nginx-dav-ext-module.zip \
+	&& curl -fSsL https://codeload.github.com/arut/nginx-dav-ext-module/zip/$WEBDAV_EXT_SHA -o /usr/src/nginx-dav-ext-module.zip \
 	&& cd /usr/src \
 	&& unzip /usr/src/nginx-dav-ext-module.zip \
+	&& mv /usr/src/nginx-dav-ext-module-$WEBDAV_EXT_SHA /usr/src/nginx-dav-ext-module \
 	&& rm /usr/src/nginx-dav-ext-module.zip \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
 	&& ./configure $CONFIG --with-debug \
@@ -114,7 +116,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& strip /usr/sbin/nginx* \
 	&& strip /usr/lib/nginx/modules/*.so \
 	&& rm -rf /usr/src/nginx-$NGINX_VERSION \
-	&& rm -rf /usr/src/nginx-dav-ext-module-master \
+	&& rm -rf /usr/src/nginx-dav-ext-module-$WEBDAV_EXT_SHA \
 	\
 	# Bring in gettext so we can get `envsubst`, then throw
 	# the rest away. To do this, we need to install `gettext`
