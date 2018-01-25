@@ -1,15 +1,13 @@
-FROM ubuntu:16.04
+FROM alpine:3.7
 
-ENV DEBIAN_FRONTEND=noninteractive
+RUN apk --no-cache add \
+	bash \
+	curl \
+	gettext \
+	nginx \
+	tini
 
-RUN apt-get update && \
-	apt-get install -yq --no-install-recommends \
-		curl \
-		gettext \
-		nginx \
-		nginx-extras \
-		&& \
-	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ENV WORKER_USERNAME=nginx
 
 RUN mkdir -p /data
 
