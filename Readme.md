@@ -12,3 +12,8 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 
 * Slim down image via alpine
 * Configure security (currently everyone can do anything)
+
+
+# Alternatives
+
+* https://github.com/jgeusebroek/docker-webdav
