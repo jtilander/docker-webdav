@@ -145,12 +145,19 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log
 
 
+# Only add htpasswd from the apache2-utils package.
+RUN apk add --no-cache --virtual .htpasswd apache2-utils \
+	&& mv /usr/bin/htpasswd /tmp/ \
+	&& apk del .htpasswd \
+	&& mv /tmp/htpasswd /usr/bin/ \
+	&& apk add --no-cache apr apr-util
+
 RUN apk --no-cache add \
 	tini
 
 ENV WORKER_USERNAME=nginx
 
-RUN mkdir -p /data
+RUN mkdir -p /data /tmp/uploads
 
 COPY /docker-entrypoint.sh /
 COPY /nginx.conf /etc/nginx/nginx.conf.tmpl

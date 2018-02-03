@@ -11,10 +11,26 @@ if [ "$1" = "nginx" ]; then
 
 	export SENDFILE=${SENDFILE:-on}
 	export TCP_NOPUSH=${TCP_NOPUSH:-off}
+	export TRUSTED_SUBNET=${TRUSTED_SUBNET:-all}
 
 	chown -R ${WORKER_USERNAME} /data
+	chown -R ${WORKER_USERNAME} /tmp/uploads
 
-	envsubst '${WORKER_COUNT} ${WORKER_CONNECTIONS} ${WORKER_USERNAME} ${LISTFORMAT} ${SENDFILE} ${TCP_NOPUSH}' > /etc/nginx/nginx.conf < /etc/nginx/nginx.conf.tmpl
+	if [ "$USERNAME" = "" ]; then
+		export PERMISSIONS="user:rw group:rw all:rw"
+		touch /etc/nginx/.htpasswd
+	else
+		export PERMISSIONS="user:rw group:r all:r"
+		htpasswd -cb /etc/nginx/.htpasswd "${USERNAME}" "${PASSWORD}"
+	fi
+
+	envsubst '${WORKER_COUNT} ${WORKER_CONNECTIONS} ${WORKER_USERNAME} ${LISTFORMAT} ${SENDFILE} ${TCP_NOPUSH} ${PERMISSIONS} ${TRUSTED_SUBNET}' > /etc/nginx/nginx.conf < /etc/nginx/nginx.conf.tmpl
+
+
+	if [ "$VERBOSE" = "1" ]; then
+		cat /etc/nginx/nginx.conf
+		cat /etc/nginx/.htpasswd
+	fi
 
 	exec /usr/sbin/nginx -g "daemon off;"
 
