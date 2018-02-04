@@ -9,8 +9,16 @@ endif
 export IMAGENAME=jtilander/webdav
 export TAG?=test
 VERBOSE?=1
-USERNAME?=bob
-PASSWORD?=initech
+WEBDAV_USERNAME?=bob
+WEBDAV_PASSWORD?=initech
+LISTENPORT?=3334
+
+LDAP_SERVER?=rocket.acme.com
+LDAP_DN?=DC=acme,DC=com
+LDAP_DOMAIN?=acme
+LDAP_BIND_USER?=
+LDAP_BIND_PASSWORD=roadrunner
+
 BUILDOPTS?=
 
 image:
@@ -20,10 +28,16 @@ image:
 run:
 	docker run --rm \
 		-e VERBOSE=$(VERBOSE) \
-		-e USERNAME=$(USERNAME) \
-		-e PASSWORD=$(PASSWORD) \
+		-e WEBDAV_USERNAME=$(WEBDAV_USERNAME) \
+		-e WEBDAV_PASSWORD=$(WEBDAV_PASSWORD) \
+		-e LISTENPORT=$(LISTENPORT) \
+		-e LDAP_SERVER=$(LDAP_SERVER) \
+		-e LDAP_DN=$(LDAP_DN) \
+		-e LDAP_DOMAIN=$(LDAP_DOMAIN) \
+		-e LDAP_BIND_USER=$(LDAP_BIND_USER) \
+		-e LDAP_PASSWORD=$(LDAP_BIND_PASSWORD) \
 		-v $(PWD)/tmp:/data \
-		-p 8181:80 \
+		-p $(LISTENPORT):$(LISTENPORT) \
 		$(IMAGENAME):$(TAG)
 
 clean:

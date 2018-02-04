@@ -2,7 +2,6 @@
 
 A quick and dirty container that serves data over WEBDAV in an nginx container.
 
-
 # Volumes
 
 |Path|Description|
@@ -15,8 +14,8 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 
 |Name|Default|Description|
 |----|-------|-----------|
-|USERNAME|guest|If set to guest: world RW w/o password. Otherwise, user gets RW and others get R|
-|PASSWORD||Set to password of the user|
+|WEBDAV_USERNAME|guest|If set to guest: world RW w/o password. Otherwise, user gets RW and others get R|
+|WEBDAV_PASSWORD||Set to password of the user|
 |WORKER_COUNT|4|Nginx worker processes|
 |WORKER_CONNECTIONS|1024|Nginx max connections|
 |WORKER_USERNAME|www-data|Run nginx as this user|
