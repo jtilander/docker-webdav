@@ -15,7 +15,7 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 
 |Name|Default|Description|
 |----|-------|-----------|
-|USERNAME||If set, this is the user that will have password access for RW|
+|USERNAME|guest|If set to guest: world RW w/o password. Otherwise, user gets RW and others get R|
 |PASSWORD||Set to password of the user|
 |WORKER_COUNT|4|Nginx worker processes|
 |WORKER_CONNECTIONS|1024|Nginx max connections|

@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 
+export USERNAME=${USERNAME:-guest}
 export LISTENPORT=${LISTENPORT:-80}
 export WORKER_COUNT=${WORKER_COUNT:-4}
 export WORKER_CONNECTIONS=${WORKER_CONNECTIONS:-1024}
@@ -29,7 +30,7 @@ if [ ! -z "$LDAP_BIND_USER" ]; then
 	# Request LDAP configuration
 	SOURCE_TEMPLATE=nginx.ldap.conf.templ
 	touch /etc/nginx/.htpasswd
-elif [ ! -z "$USERNAME" ]; then
+elif [ "$USERNAME" != "guest" ]; then
 	# Request basic auth configuration
 	SOURCE_TEMPLATE=nginx.basic.conf.templ
 	htpasswd -cb /etc/nginx/.htpasswd "${USERNAME}" "${PASSWORD}"
