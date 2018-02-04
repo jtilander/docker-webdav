@@ -11,9 +11,10 @@ export TAG?=test
 VERBOSE?=1
 USERNAME?=bob
 PASSWORD?=initech
+BUILDOPTS?=
 
 image:
-	docker build -t $(IMAGENAME):$(TAG) .
+	docker build $(BUILDOPTS) -t $(IMAGENAME):$(TAG) .
 	docker images $(IMAGENAME):$(TAG)
 
 run:
@@ -27,3 +28,4 @@ run:
 
 clean:
 	-docker run --rm -v $(PWD):/data alpine:3.7 rm -rf /data/tmp
+	docker rmi $(IMAGENAME):$(TAG)
