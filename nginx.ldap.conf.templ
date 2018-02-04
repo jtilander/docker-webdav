@@ -1,0 +1,46 @@
+ldap_server mainldapserver {
+    url ${LDAP_PROTOCOL}://${LDAP_SERVER}:${LDAP_PORT}/${LDAP_DN}?sAMAccountName?sub?(objectClass=person);
+    binddn "${LDAP_DOMAIN}\\${LDAP_USER}";
+    binddn_passwd ${LDAP_PASSWORD};
+    group_attribute uniquemember;
+    group_attribute_is_dn on;
+    require valid_user;
+    referral off;
+    ssl_check_cert off;
+    max_down_retries_count 3;
+}
+
+server {
+    listen 80;
+
+    client_max_body_size  0;
+    proxy_read_timeout    300;
+    proxy_send_timeout    300;
+    proxy_set_header      Host $host;
+    proxy_set_header      X-Real-IP $remote_addr;
+    proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header      X-Forwarded-Proto $scheme;
+    port_in_redirect      off;
+
+    autoindex on;
+    autoindex_format ${LISTFORMAT};
+
+    location / {
+        root                        /data;
+        client_body_temp_path       /tmp/uploads;
+        dav_methods                 PUT DELETE MKCOL COPY MOVE;
+        dav_ext_methods             PROPFIND OPTIONS;
+        create_full_put_path        on;
+        dav_access                  user:rw group:r all:r;
+        autoindex                   on;
+
+        limit_except GET PROPFIND OPTIONS{
+            auth_ldap               "LDAP Required";
+            auth_ldap_servers       mainldapserver;
+            allow                   ${TRUSTED_SUBNET};
+            deny                    all;
+        }
+
+        allow                       all;
+    }
+}

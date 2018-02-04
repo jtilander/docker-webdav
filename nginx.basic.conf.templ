@@ -1,0 +1,34 @@
+server {
+    listen 80;
+
+    client_max_body_size  0;
+    proxy_read_timeout    300;
+    proxy_send_timeout    300;
+    proxy_set_header      Host $host;
+    proxy_set_header      X-Real-IP $remote_addr;
+    proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header      X-Forwarded-Proto $scheme;
+    port_in_redirect      off;
+
+    autoindex on;
+    autoindex_format ${LISTFORMAT};
+
+    location / {
+        root                        /data;
+        client_body_temp_path       /tmp/uploads;
+        dav_methods                 PUT DELETE MKCOL COPY MOVE;
+        dav_ext_methods             PROPFIND OPTIONS;
+        create_full_put_path        on;
+        dav_access                  user:rw group:r all:r;
+        autoindex                   on;
+
+        limit_except GET PROPFIND OPTIONS{
+            auth_basic_user_file    /etc/nginx/.htpasswd;
+            auth_basic              "restricted";
+            allow                   ${TRUSTED_SUBNET};
+            deny                    all;
+        }
+
+        allow                       all;
+    }
+}

@@ -1,7 +1,12 @@
+
+
 FROM alpine:3.7
 
 ENV NGINX_VERSION 1.13.8
 ENV WEBDAV_EXT_SHA 430fd774fe838a04f1a5defbf1dd571d42300cf9
+ENV LDAP_AUTH_SHA 42d195d7a7575ebab1c369ad3fc5d78dc2c2669c
+
+
 
 RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& CONFIG="\
@@ -49,6 +54,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 		--with-file-aio \
 		--with-http_v2_module \
 		--add-module=/usr/src/nginx-dav-ext-module \
+		--add-module=/usr/src/nginx-auth-ldap \
 	" \
 	&& addgroup -S nginx \
 	&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
@@ -64,7 +70,8 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 		libxslt-dev \
 		linux-headers \
 		make \
-		openssl-dev \
+		openldap-dev \
+		libressl-dev \
 		pcre-dev \
 		zlib-dev \
 	&& curl -fSsL http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz -o nginx.tar.gz \
@@ -91,6 +98,11 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& unzip /usr/src/nginx-dav-ext-module.zip \
 	&& mv /usr/src/nginx-dav-ext-module-$WEBDAV_EXT_SHA /usr/src/nginx-dav-ext-module \
 	&& rm /usr/src/nginx-dav-ext-module.zip \
+	&& curl -fSsL https://github.com/kvspb/nginx-auth-ldap/archive/${LDAP_AUTH_SHA}.zip -o /usr/src/nginx-auth-ldap.zip \
+	&& cd /usr/src \
+	&& unzip /usr/src/nginx-auth-ldap.zip \
+	&& rm nginx-auth-ldap.zip \
+	&& mv /usr/src/nginx-auth-ldap-${LDAP_AUTH_SHA} /usr/src/nginx-auth-ldap \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
 	&& ./configure $CONFIG --with-debug \
 	&& make -j$(getconf _NPROCESSORS_ONLN) \
@@ -159,9 +171,9 @@ ENV WORKER_USERNAME=nginx
 
 RUN mkdir -p /data /tmp/uploads
 
-COPY /docker-entrypoint.sh /
-COPY /nginx.conf /etc/nginx/nginx.conf.tmpl
-COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+COPY docker-entrypoint.sh /
+COPY nginx.conf.templ /etc/nginx/nginx.conf.templ
+COPY nginx.*.conf.templ /etc/nginx/conf.d/
 
 EXPOSE 80
 
