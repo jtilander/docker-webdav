@@ -21,6 +21,8 @@ LDAP_BIND_PASSWORD=roadrunner
 
 BUILDOPTS?=
 
+.PHONY: image tests run clean
+
 image:
 	docker build $(BUILDOPTS) -t $(IMAGENAME):$(TAG) .
 	docker images $(IMAGENAME):$(TAG)
@@ -39,6 +41,10 @@ run:
 		-v $(PWD)/tmp:/data \
 		-p $(LISTENPORT):$(LISTENPORT) \
 		$(IMAGENAME):$(TAG)
+
+
+tests: image
+	$(MAKE) -C tests image run
 
 clean:
 	-docker run --rm -v $(PWD):/data alpine:3.7 rm -rf /data/tmp

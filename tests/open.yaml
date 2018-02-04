@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  webdav:
+    image: jtilander/webdav:test
+    restart: 'no'
+    environment:
+      - LISTENPORT=80
+
+  tests:
+    image: jtilander/webdav-tests:test
+    restart: 'no'
+    command: tests open
+    volumes:
+      - .:/app:ro
+    links:
+      - webdav

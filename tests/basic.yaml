@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  webdav:
+    image: jtilander/webdav:test
+    restart: 'no'
+    environment:
+      - WEBDAV_USERNAME=bob
+      - WEBDAV_PASSWORD=password
+      - LISTENPORT=80
+
+  tests:
+    image: jtilander/webdav-tests:test
+    restart: 'no'
+    command: tests basic
+    volumes:
+      - .:/app:ro
+    links:
+      - webdav
