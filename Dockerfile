@@ -1,12 +1,8 @@
-
-
 FROM alpine:3.7
 
 ENV NGINX_VERSION 1.13.8
 ENV WEBDAV_EXT_SHA 430fd774fe838a04f1a5defbf1dd571d42300cf9
 ENV LDAP_AUTH_SHA 42d195d7a7575ebab1c369ad3fc5d78dc2c2669c
-
-
 
 RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& CONFIG="\
@@ -128,7 +124,8 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& strip /usr/sbin/nginx* \
 	&& strip /usr/lib/nginx/modules/*.so \
 	&& rm -rf /usr/src/nginx-$NGINX_VERSION \
-	&& rm -rf /usr/src/nginx-dav-ext-module-$WEBDAV_EXT_SHA \
+	&& rm -rf /usr/src/nginx-dav-ext-module \
+	&& rm -rf /usr/src/nginx-auth-ldap \
 	\
 	# Bring in gettext so we can get `envsubst`, then throw
 	# the rest away. To do this, we need to install `gettext`
@@ -175,9 +172,9 @@ COPY docker-entrypoint.sh /
 COPY nginx.conf.templ /etc/nginx/nginx.conf.templ
 COPY nginx.*.conf.templ /etc/nginx/conf.d/
 
-EXPOSE 80
-
 STOPSIGNAL SIGTERM
+
+VOLUME ["/data", "/tmp/uploads"]
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx"]
