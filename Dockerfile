@@ -178,3 +178,6 @@ VOLUME ["/data", "/tmp/uploads"]
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx"]
+
+ARG VERSION=unknown
+RUN echo "$VERSION" > /version.txt

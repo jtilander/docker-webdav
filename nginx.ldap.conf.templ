@@ -1,7 +1,7 @@
 ldap_server mainldapserver {
     url ${LDAP_PROTOCOL}://${LDAP_SERVER}:${LDAP_PORT}/${LDAP_DN}?sAMAccountName?sub?(objectClass=person);
-    binddn "${LDAP_DOMAIN}\\${LDAP_USER}";
-    binddn_passwd ${LDAP_PASSWORD};
+    binddn "${LDAP_DOMAIN}\\${LDAP_BIND_USER}";
+    binddn_passwd ${LDAP_BIND_PASSWORD};
     group_attribute uniquemember;
     group_attribute_is_dn on;
     require valid_user;
