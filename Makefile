@@ -42,6 +42,22 @@ run:
 		-p $(LISTENPORT):$(LISTENPORT) \
 		$(IMAGENAME):$(TAG)
 
+runhost:
+	docker run --net=host --rm \
+		-e VERBOSE=$(VERBOSE) \
+		-e WEBDAV_USERNAME=$(WEBDAV_USERNAME) \
+		-e WEBDAV_PASSWORD=$(WEBDAV_PASSWORD) \
+		-e LISTENPORT=$(LISTENPORT) \
+		-e LDAP_SERVER=$(LDAP_SERVER) \
+		-e LDAP_DN=$(LDAP_DN) \
+		-e LDAP_DOMAIN=$(LDAP_DOMAIN) \
+		-e LDAP_BIND_USER=$(LDAP_BIND_USER) \
+		-e LDAP_PASSWORD=$(LDAP_BIND_PASSWORD) \
+		-v $(PWD)/tmp:/data \
+		-p $(LISTENPORT):$(LISTENPORT) \
+		$(IMAGENAME):$(TAG)
+
+
 
 tests: image
 	$(MAKE) -C tests image run
