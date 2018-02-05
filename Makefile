@@ -38,7 +38,8 @@ run:
 		-e LDAP_DOMAIN=$(LDAP_DOMAIN) \
 		-e LDAP_BIND_USER=$(LDAP_BIND_USER) \
 		-e LDAP_PASSWORD=$(LDAP_BIND_PASSWORD) \
-		-v $(PWD)/tmp:/data \
+		-v $(PWD)/tmp/data:/data \
+		-v $(PWD)/tmp/uploads:/tmp/uploads \
 		-p $(LISTENPORT):$(LISTENPORT) \
 		$(IMAGENAME):$(TAG)
 
@@ -53,8 +54,8 @@ runhost:
 		-e LDAP_DOMAIN=$(LDAP_DOMAIN) \
 		-e LDAP_BIND_USER=$(LDAP_BIND_USER) \
 		-e LDAP_PASSWORD=$(LDAP_BIND_PASSWORD) \
-		-v $(PWD)/tmp:/data \
-		-p $(LISTENPORT):$(LISTENPORT) \
+		-v $(PWD)/tmp/data:/data \
+		-v $(PWD)/tmp/uploads:/tmp/uploads \
 		$(IMAGENAME):$(TAG)
 
 
