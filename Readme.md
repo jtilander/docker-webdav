@@ -44,3 +44,4 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 # Alternatives
 
 * https://github.com/jgeusebroek/docker-webdav
+
