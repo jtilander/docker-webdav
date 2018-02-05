@@ -25,7 +25,7 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 |TRUSTED_SUBNET|all|Only allow write from this subnet (CIDR)|
 |LISTENPORT|80|Port to listen to|
 |LDAP_PROTOCOL|ldaps|Can also be set to unencrypted ldap|
-|LDAP_PORT|3268|Which port to connect to|
+|LDAP_PORT|636|Which port to connect to|
 |LDAP_SERVER||Server address|
 |LDAP_DN||The domain path to search, e.g. DC=foobar,DC=com|
 |LDAP_DOMAIN||Short hand domain name, e.g. mycompany|
