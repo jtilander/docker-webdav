@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+export VERSION=$(cat /version.txt)
+echo "Now running jtilander/webdav $VERSION"
+
+
 export WEBDAV_USERNAME=${WEBDAV_USERNAME:-guest}
 export LISTENPORT=${LISTENPORT:-3334}
 export WORKER_COUNT=${WORKER_COUNT:-4}

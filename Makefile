@@ -2,8 +2,10 @@ ifeq ($(OS),Windows_NT)
 	detected_OS := Windows
 	export PWD?=$(shell echo %CD%)
 	export SHELL=cmd
+	export VERSION=unknown
 else
 	detected_OS := $(shell uname -s)
+	export VERSION=$(shell git describe --tags --dirty 2>/dev/null || echo unknown)
 endif
 
 export IMAGENAME=jtilander/webdav
@@ -24,7 +26,7 @@ BUILDOPTS?=
 .PHONY: image tests run clean
 
 image:
-	docker build $(BUILDOPTS) -t $(IMAGENAME):$(TAG) .
+	docker build --build-arg VERSION=$(VERSION) $(BUILDOPTS) -t $(IMAGENAME):$(TAG) .
 	docker images $(IMAGENAME):$(TAG)
 
 run:
@@ -57,8 +59,6 @@ runhost:
 		-v $(PWD)/tmp/data:/data \
 		-v $(PWD)/tmp/uploads:/tmp/uploads \
 		$(IMAGENAME):$(TAG)
-
-
 
 tests: image
 	$(MAKE) -C tests image run
