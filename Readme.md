@@ -8,7 +8,7 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 |----|-----------|
 |/data|Exported data, if you want to persist, map this path.|
 |/tmp/upload|Temporary storage for uploads. Map for speed.|
-
+|/log|A copy of the access log will be written here if USE_PERFLOG=1|
 
 # Environment variables
 
@@ -18,7 +18,7 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 |WEBDAV_PASSWORD||Set to password of the user|
 |WORKER_COUNT|4|Nginx worker processes|
 |WORKER_CONNECTIONS|1024|Nginx max connections|
-|WORKER_USERNAME|www-data|Run nginx as this user|
+|WORKER_USERNAME|nginx|Run nginx as this user|
 |LISTFORMAT|json|How we return directory listings|
 |SENDFILE|on|Nginx sendfile enabled?|
 |TCP_NOPUSH|off|Nginx tcp_nopush?|
