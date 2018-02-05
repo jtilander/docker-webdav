@@ -20,6 +20,7 @@ LDAP_DN?=DC=acme,DC=com
 LDAP_DOMAIN?=acme
 LDAP_BIND_USER?=
 LDAP_BIND_PASSWORD=roadrunner
+USE_PERFLOG?=0
 
 BUILDOPTS?=
 
@@ -35,7 +36,9 @@ run:
 		-e WEBDAV_USERNAME=$(WEBDAV_USERNAME) \
 		-e WEBDAV_PASSWORD=$(WEBDAV_PASSWORD) \
 		-e LISTENPORT=$(LISTENPORT) \
+		-e USE_PERFLOG=$(USE_PERFLOG) \
 		-v $(PWD)/tmp/data:/data \
+		-v $(PWD)/tmp/logs:/log \
 		-v $(PWD)/tmp/uploads:/tmp/uploads \
 		-p $(LISTENPORT):$(LISTENPORT) \
 		$(IMAGENAME):$(TAG)
@@ -46,12 +49,9 @@ runhost:
 		-e WEBDAV_USERNAME=$(WEBDAV_USERNAME) \
 		-e WEBDAV_PASSWORD=$(WEBDAV_PASSWORD) \
 		-e LISTENPORT=$(LISTENPORT) \
-		-e LDAP_SERVER=$(LDAP_SERVER) \
-		-e LDAP_DN=$(LDAP_DN) \
-		-e LDAP_DOMAIN=$(LDAP_DOMAIN) \
-		-e LDAP_BIND_USER=$(LDAP_BIND_USER) \
-		-e LDAP_PASSWORD=$(LDAP_BIND_PASSWORD) \
+		-e USE_PERFLOG=$(USE_PERFLOG) \
 		-v $(PWD)/tmp/data:/data \
+		-v $(PWD)/tmp/logs:/log \
 		-v $(PWD)/tmp/uploads:/tmp/uploads \
 		$(IMAGENAME):$(TAG)
 

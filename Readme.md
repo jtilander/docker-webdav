@@ -31,6 +31,7 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 |LDAP_DOMAIN||Short hand domain name, e.g. mycompany|
 |LDAP_USER||Which username we will bind with|
 |LDAP_PASSWORD||Password for the bind user|
+|USE_PERFLOG|0|Also logs to /log/access.log if set to 1, useful for [exporting](https://www.martin-helmich.de/en/blog/monitoring-nginx.html)|
 
 # Resources
 
@@ -38,6 +39,7 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 * https://thoughts.t37.net/nginx-optimization-understanding-sendfile-tcp-nodelay-and-tcp-nopush-c55cdd276765
 * https://www.nginx.com/resources/admin-guide/serving-static-content/
 * https://github.com/kvspb/nginx-auth-ldap
+* https://www.martin-helmich.de/en/blog/monitoring-nginx.html
 
 # Alternatives
 

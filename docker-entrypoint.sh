@@ -22,11 +22,16 @@ export LDAP_DN=${LDAP_DN}
 export LDAP_DOMAIN=${LDAP_DOMAIN}
 export LDAP_BIND_USER=${LDAP_BIND_USER}
 export LDAP_BIND_PASSWORD=${LDAP_BIND_PASSWORD}
+export USE_PERFLOG=${USE_PERFLOG:0}
 
 chown -R ${WORKER_USERNAME} /data
 chown -R ${WORKER_USERNAME} /tmp/uploads
 
-envsubst '${WORKER_COUNT} ${WORKER_CONNECTIONS} ${WORKER_USERNAME} ${LISTFORMAT} ${SENDFILE} ${TCP_NOPUSH}' > /etc/nginx/nginx.conf < /etc/nginx/nginx.conf.templ
+if [ "$USE_PERFLOG" = "1" ]; then
+	export ACCESS_LOG_STATEMENT='access_log  /log/access.log upstream_time;'
+fi
+
+envsubst '${WORKER_COUNT} ${WORKER_CONNECTIONS} ${WORKER_USERNAME} ${LISTFORMAT} ${SENDFILE} ${TCP_NOPUSH} ${ACCESS_LOG_STATEMENT}' > /etc/nginx/nginx.conf < /etc/nginx/nginx.conf.templ
 
 if [ ! -z "$LDAP_BIND_USER" ]; then
 	# Request LDAP configuration

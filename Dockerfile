@@ -166,7 +166,7 @@ RUN apk --no-cache add \
 
 ENV WORKER_USERNAME=nginx
 
-RUN mkdir -p /data /tmp/uploads
+RUN mkdir -p /data /tmp/uploads /log
 
 COPY docker-entrypoint.sh /
 COPY nginx.conf.templ /etc/nginx/nginx.conf.templ
@@ -174,7 +174,7 @@ COPY nginx.*.conf.templ /etc/nginx/conf.d/
 
 STOPSIGNAL SIGTERM
 
-VOLUME ["/data", "/tmp/uploads"]
+VOLUME ["/data", "/tmp/uploads", "/log"]
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx"]
