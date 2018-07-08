@@ -21,6 +21,7 @@ LDAP_DOMAIN?=acme
 LDAP_BIND_USER?=
 LDAP_BIND_PASSWORD=roadrunner
 USE_PERFLOG?=0
+SSL?=off
 
 BUILDOPTS?=
 
@@ -37,6 +38,7 @@ run:
 		-e WEBDAV_PASSWORD=$(WEBDAV_PASSWORD) \
 		-e LISTENPORT=$(LISTENPORT) \
 		-e USE_PERFLOG=$(USE_PERFLOG) \
+		-e SSL=${SSL} \
 		-v $(PWD)/tmp/data:/data \
 		-v $(PWD)/tmp/logs:/log \
 		-v $(PWD)/tmp/uploads:/tmp/uploads \
@@ -50,6 +52,7 @@ runhost:
 		-e WEBDAV_PASSWORD=$(WEBDAV_PASSWORD) \
 		-e LISTENPORT=$(LISTENPORT) \
 		-e USE_PERFLOG=$(USE_PERFLOG) \
+		-e SSL=${SSL} \
 		-v $(PWD)/tmp/data:/data \
 		-v $(PWD)/tmp/logs:/log \
 		-v $(PWD)/tmp/uploads:/tmp/uploads \
@@ -61,3 +64,9 @@ tests: image
 clean:
 	-docker run --rm -v $(PWD):/data alpine:3.7 rm -rf /data/tmp
 	docker rmi $(IMAGENAME):$(TAG)
+
+makefakekeys:
+	openssl req -x509 -newkey rsa:4096 -keyout bad.key -out bad.pem -days 3650 -nodes
+
+printcert:
+	openssl x509 -inform pem -in bad.pem -noout -text

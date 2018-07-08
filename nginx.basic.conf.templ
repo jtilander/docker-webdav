@@ -1,5 +1,9 @@
 server {
-    listen ${LISTENPORT};
+    listen                ${LISTENPORT};
+
+    ssl                   ${SSL};
+    ssl_certificate       ${CERTIFICATE};
+    ssl_certificate_key   ${CERTIFICATE_KEY};
 
     client_max_body_size  0;
     proxy_read_timeout    300;
