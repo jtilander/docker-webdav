@@ -14,6 +14,7 @@ export LISTFORMAT=${LISTFORMAT:-json}
 export SENDFILE=${SENDFILE:-on}
 export TCP_NOPUSH=${TCP_NOPUSH:-off}
 export TRUSTED_SUBNET=${TRUSTED_SUBNET:-all}
+export CHOWN=${CHOWN:-0}
 
 export LDAP_PROTOCOL=${LDAP_PROTOCOL:-ldaps}
 export LDAP_PORT=${LDAP_PORT:-3268}
@@ -32,16 +33,30 @@ export LDAP_BIND_PASSWORD=${LDAP_BIND_PASSWORD}
 export LDAP_FILTER=${LDAP_FILTER:-"sAMAccountName?sub?(objectClass=person)"}
 export USE_PERFLOG=${USE_PERFLOG:-0}
 
+OWNER=
 
+if [ -n "$PGID" ]; then
+  addgroup -g "${PGID}" abc
+  OWNER=":abc"
+fi
+
+if [ -n "$PUID" ]; then
+  export WORKER_USERNAME=abc
+  adduser -D -H -G "abc" -u "${PUID}" "${WORKER_USERNAME}"
+  OWNER="${WORKER_USERNAME}${OWNER}"
+fi
+
+export OWNER=${OWNER}
 export SSL=${SSL:-off}
 export CERTIFICATE=${CERTIFICATE:-/etc/certs.d/bad.pem}
 export CERTIFICATE_KEY=${CERTIFICATE_KEY:-/etc/certs.d/bad.key}
 
-chown -R ${WORKER_USERNAME} /data
-chown -R ${WORKER_USERNAME} /tmp/uploads
+if [ -n "$OWNER" -a "${CHOWN}" -eq 1 ]; then
+  chown -R "${OWNER}" /data /tmp/uploads
+fi
 
 if [ "$USE_PERFLOG" = "1" ]; then
-	export ACCESS_LOG_STATEMENT='access_log  /log/access.log upstream_time;'
+  export ACCESS_LOG_STATEMENT='access_log  /log/access.log upstream_time;'
 fi
 
 envsubst '${WORKER_COUNT} ${WORKER_CONNECTIONS} ${WORKER_USERNAME} ${LISTFORMAT} ${SENDFILE} ${TCP_NOPUSH} ${ACCESS_LOG_STATEMENT}' > /etc/nginx/nginx.conf < /etc/nginx/nginx.conf.templ

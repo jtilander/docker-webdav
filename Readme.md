@@ -36,6 +36,21 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 |SSL|off|Set to on, to use SSL over the listenport|
 |CERTIFICATE|/etc/certs.d/bad.pem|Use this to map in a proper certificate|
 |CERTIFICATE_KEY|/etc/certs.d/bad.key|Use this to map in a proper key|
+|PGID||for for GroupID - see below for explanation|
+|PUID||for for UserID - see below for explanation|
+
+
+## User / Group Identifiers
+
+Sometimes when using data volumes (`-v` flags) permissions issues can arise between the host OS and the container. We avoid this issue by allowing you to specify the user `PUID` and group `PGID`. Ensure the data volume directory on the host is owned by the same user you specify and it will "just work" <sup>TM</sup>.
+
+In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as below:
+
+```
+  $ id <dockeruser>
+    uid=1001(dockeruser) gid=1001(dockergroup) groups=1001(dockergroup)
+```
+
 
 # Resources
 
