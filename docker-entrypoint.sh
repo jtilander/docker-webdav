@@ -29,8 +29,9 @@ else
 fi
 
 export LDAP_BIND_PASSWORD=${LDAP_BIND_PASSWORD}
-
 export LDAP_FILTER=${LDAP_FILTER:-"sAMAccountName?sub?(objectClass=person)"}
+export LDAP_AUTH_MESSAGE=${LDAP_AUTH_MESSAGE:-"LDAP Required"}
+
 export USE_PERFLOG=${USE_PERFLOG:-0}
 
 OWNER=
@@ -75,7 +76,7 @@ else
 	touch /etc/nginx/.htpasswd
 fi
 
-envsubst '${SSL} ${CERTIFICATE} ${CERTIFICATE_KEY} ${LISTFORMAT} ${LDAP_PORT} ${LDAP_PROTOCOL} ${LDAP_DN} ${LDAP_SERVER} ${LDAP_DOMAIN} ${LDAP_BIND_USER} ${LDAP_BIND_PASSWORD} ${LDAP_FILTER} ${TRUSTED_SUBNET} ${LISTENPORT}' > /etc/nginx/conf.d/default.conf < /etc/nginx/conf.d/${SOURCE_TEMPLATE}
+envsubst '${SSL} ${CERTIFICATE} ${CERTIFICATE_KEY} ${LISTFORMAT} ${LDAP_PORT} ${LDAP_PROTOCOL} ${LDAP_DN} ${LDAP_SERVER} ${LDAP_DOMAIN} ${LDAP_BIND_USER} ${LDAP_BIND_PASSWORD} ${LDAP_FILTER} ${LDAP_AUTH_MESSAGE} ${TRUSTED_SUBNET} ${LISTENPORT}' > /etc/nginx/conf.d/default.conf < /etc/nginx/conf.d/${SOURCE_TEMPLATE}
 
 if [ "$1" = "nginx" ]; then
 	shift

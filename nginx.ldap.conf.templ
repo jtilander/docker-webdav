@@ -38,8 +38,8 @@ server {
         dav_access                  user:rw group:r all:r;
         autoindex                   on;
 
-        limit_except GET PROPFIND OPTIONS{
-            auth_ldap               "LDAP Required";
+        limit_except GET PROPFIND OPTIONS {
+            auth_ldap               ${LDAP_AUTH_MESSAGE};
             auth_ldap_servers       mainldapserver;
             allow                   ${TRUSTED_SUBNET};
             deny                    all;
