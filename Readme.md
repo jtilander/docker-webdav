@@ -31,6 +31,7 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 |LDAP_DOMAIN||Short hand domain name, e.g. mycompany|
 |LDAP_BIND_USER||Which username we will bind with|
 |LDAP_BIND_PASSWORD||Password for the bind user|
+|LDAP_FILTER|`sAMAccountName?sub?(objectClass=person)`|Filter expression (use `uid?sub?(objectClass=inetOrgPerson)` for the OpenLDAP server)|
 |USE_PERFLOG|0|Also logs to /log/access.log if set to 1, useful for [exporting](https://www.martin-helmich.de/en/blog/monitoring-nginx.html)|
 |SSL|off|Set to on, to use SSL over the listenport|
 |CERTIFICATE|/etc/certs.d/bad.pem|Use this to map in a proper certificate|

@@ -20,9 +20,17 @@ export LDAP_PORT=${LDAP_PORT:-3268}
 export LDAP_SERVER=${LDAP_SERVER}
 export LDAP_DN=${LDAP_DN}
 export LDAP_DOMAIN=${LDAP_DOMAIN}
-export LDAP_BIND_USER=${LDAP_BIND_USER}
+
+if [ -n "$LDAP_DOMAIN" ]; then
+  export LDAP_BIND_USER=${LDAP_DOMAIN}\\${LDAP_BIND_USER}
+else
+  export LDAP_BIND_USER=${LDAP_BIND_USER}
+fi
+
 export LDAP_BIND_PASSWORD=${LDAP_BIND_PASSWORD}
-export USE_PERFLOG=${USE_PERFLOG:0}
+
+export LDAP_FILTER=${LDAP_FILTER:-"sAMAccountName?sub?(objectClass=person)"}
+export USE_PERFLOG=${USE_PERFLOG:-0}
 
 
 export SSL=${SSL:-off}
@@ -52,7 +60,7 @@ else
 	touch /etc/nginx/.htpasswd
 fi
 
-envsubst '${SSL} ${CERTIFICATE} ${CERTIFICATE_KEY} ${LISTFORMAT} ${LDAP_PORT} ${LDAP_PROTOCOL} ${LDAP_DN} ${LDAP_SERVER} ${LDAP_DOMAIN} ${LDAP_BIND_USER} ${LDAP_BIND_PASSWORD} ${TRUSTED_SUBNET} ${LISTENPORT}' > /etc/nginx/conf.d/default.conf < /etc/nginx/conf.d/${SOURCE_TEMPLATE}
+envsubst '${SSL} ${CERTIFICATE} ${CERTIFICATE_KEY} ${LISTFORMAT} ${LDAP_PORT} ${LDAP_PROTOCOL} ${LDAP_DN} ${LDAP_SERVER} ${LDAP_DOMAIN} ${LDAP_BIND_USER} ${LDAP_BIND_PASSWORD} ${LDAP_FILTER} ${TRUSTED_SUBNET} ${LISTENPORT}' > /etc/nginx/conf.d/default.conf < /etc/nginx/conf.d/${SOURCE_TEMPLATE}
 
 if [ "$1" = "nginx" ]; then
 	shift
