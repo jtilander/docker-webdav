@@ -35,16 +35,16 @@ server {
         dav_methods                 PUT DELETE MKCOL COPY MOVE;
         dav_ext_methods             PROPFIND OPTIONS;
         create_full_put_path        on;
-        dav_access                  user:rw group:r all:r;
+        dav_access                  user:rw group:r;
         autoindex                   on;
 
-        limit_except GET PROPFIND OPTIONS {
-            auth_ldap               ${LDAP_AUTH_MESSAGE};
+        limit_except ${LDAP_NOAUTH_METHODS} {
+            auth_ldap               "${LDAP_AUTH_MESSAGE}";
             auth_ldap_servers       mainldapserver;
             allow                   ${TRUSTED_SUBNET};
             deny                    all;
         }
 
-        allow                       all;
+        #allow                       all;
     }
 }
