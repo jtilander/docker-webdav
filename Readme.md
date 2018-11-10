@@ -22,6 +22,7 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 |LISTFORMAT|json|How we return directory listings|
 |SENDFILE|on|Nginx sendfile enabled?|
 |TCP_NOPUSH|off|Nginx tcp_nopush?|
+|TCP_NODELAY|on|Nginx tcp_nodelay?|
 |TRUSTED_SUBNET|all|Only allow write from this subnet (CIDR)|
 |LISTENPORT|80|Port to listen to|
 |LDAP_PROTOCOL|ldaps|Can also be set to unencrypted ldap|
@@ -33,6 +34,7 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 |LDAP_BIND_PASSWORD||Password for the bind user|
 |LDAP_FILTER|`sAMAccountName?sub?(objectClass=person)`|Filter expression (use `uid?sub?(objectClass=inetOrgPerson)` for the OpenLDAP server)|
 |LDAP_AUTH_MESSAGE|LDAP Required|Authentication message|
+|LDAP_OPEN_METHODS|GET PROFIND OPTIONS|Methods accessible without authentication or the special value "none"|
 |USE_PERFLOG|0|Also logs to /log/access.log if set to 1, useful for [exporting](https://www.martin-helmich.de/en/blog/monitoring-nginx.html)|
 |SSL|off|Set to on, to use SSL over the listenport|
 |CERTIFICATE|/etc/certs.d/bad.pem|Use this to map in a proper certificate|

@@ -11,8 +11,36 @@ events {
 }
 
 http {
-    include       /etc/nginx/mime.types;
-    default_type  application/octet-stream;
+    ##
+    # Basic Settings
+    ##
+
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    sendfile   ${SENDFILE};
+    tcp_nopush ${TCP_NOPUSH};
+    tcp_nodelay ${TCP_NODELAY};
+
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+
+    # Allow Direct IO from 4M filesize.
+    directio 4m;
+    aio threads;
+
+    ##
+    # Gzip Settings
+    ##
+
+    gzip on;
+
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
 
     log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
                       '$status $body_bytes_sent "$http_referer" '
@@ -25,11 +53,6 @@ http {
 
     access_log  /var/log/nginx/access.log  upstream_time;
     ${ACCESS_LOG_STATEMENT}
-
-    sendfile   ${SENDFILE};
-    tcp_nopush ${TCP_NOPUSH};
-
-    keepalive_timeout  65;
 
     include /etc/nginx/conf.d/*.conf;
 }

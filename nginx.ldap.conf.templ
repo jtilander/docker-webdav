@@ -12,6 +12,7 @@ ldap_server mainldapserver {
 
 server {
     listen                ${LISTENPORT};
+    charset utf-8;
 
     ssl                   ${SSL};
     ssl_certificate       ${CERTIFICATE};
@@ -37,13 +38,15 @@ server {
         create_full_put_path        on;
         dav_access                  user:rw group:r;
         autoindex                   on;
+        # Disable uploading file size limit.
+        client_max_body_size        0;
 
-        limit_except ${LDAP_NOAUTH_METHODS} {
+        ${LDAP_OPEN_METHODS}
             auth_ldap               "${LDAP_AUTH_MESSAGE}";
             auth_ldap_servers       mainldapserver;
             allow                   ${TRUSTED_SUBNET};
             deny                    all;
-        }
+        ${LDAP_OPEN_METHODS_END}
 
         #allow                       all;
     }
