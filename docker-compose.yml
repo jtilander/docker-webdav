@@ -7,7 +7,8 @@ services:
       - 80:80
     volumes:
       - ./user_data/:/data
-      - ./user_data/uploads:/tmp/uploads
+      - ./user_data/.uploads:/tmp/uploads
+      - ./logs:/log
     environment:
       - LDAP_SERVER=<CHANGEME>
       - LDAP_PROTOCOL=ldap
@@ -19,6 +20,7 @@ services:
       - LDAP_BIND_PASSWORD=<CHANGEME>
       - LDAP_AUTH_MESSAGE=Please, enter your login and password
       - LDAP_OPEN_METHODS=none
+      - MIN_DELETE_DEPTH=3
       - CHOWN=0
       - PGID=996
       - PUID=1004

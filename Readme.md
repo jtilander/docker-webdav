@@ -20,6 +20,7 @@ A quick and dirty container that serves data over WEBDAV in an nginx container.
 |WORKER_CONNECTIONS|1024|Nginx max connections|
 |WORKER_USERNAME|nginx|Run nginx as this user|
 |LISTFORMAT|json|How we return directory listings|
+|MIN_DELETE_DEPTH|0|Minimum depth where user can delete files or folders|
 |SENDFILE|on|Nginx sendfile enabled?|
 |TCP_NOPUSH|off|Nginx tcp_nopush?|
 |TCP_NODELAY|on|Nginx tcp_nodelay?|
