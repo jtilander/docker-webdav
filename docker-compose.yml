@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  webdav:
+    build: .
+    ports:
+      - 80:80
+    volumes:
+      - ./user_data/:/data
+      - ./user_data/.uploads:/tmp/uploads
+      - ./logs:/log
+    environment:
+      - LDAP_SERVER=<CHANGEME>
+      - LDAP_PROTOCOL=ldap
+      - LDAP_PORT=389
+      # - LDAP_DOMAIN=test
+      - LDAP_DN=ou=users,dc=nas,dc=nas
+      - LDAP_FILTER=uid?sub?(&(objectClass=inetOrgPerson)(memberOf=cn=GROUP_NAME,ou=groups,dc=example,dc=com))
+      - LDAP_BIND_USER=cn=admin,dc=nas,dc=nas
+      - LDAP_BIND_PASSWORD=<CHANGEME>
+      - LDAP_AUTH_MESSAGE=Please, enter your login and password
+      - LDAP_OPEN_METHODS=none
+      - MIN_DELETE_DEPTH=3
+      - CHOWN=0
+      - PGID=996
+      - PUID=1004
+      - TZ=Europe/Moscow
+    restart: always

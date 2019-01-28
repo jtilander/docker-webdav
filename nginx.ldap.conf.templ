@@ -1,17 +1,19 @@
 ldap_server mainldapserver {
-    url ${LDAP_PROTOCOL}://${LDAP_SERVER}:${LDAP_PORT}/${LDAP_DN}?sAMAccountName?sub?(objectClass=person);
-    binddn "${LDAP_DOMAIN}\\${LDAP_BIND_USER}";
+    url ${LDAP_PROTOCOL}://${LDAP_SERVER}:${LDAP_PORT}/${LDAP_DN}?${LDAP_FILTER};
+    binddn "${LDAP_BIND_USER}";
     binddn_passwd ${LDAP_BIND_PASSWORD};
-    group_attribute uniquemember;
+    group_attribute uniqueMember;
     group_attribute_is_dn on;
+    #require group "CN=Admins,OU=My Security Groups,DC=company,DC=com";
     require valid_user;
-    referral off;
+    referral on;
     ssl_check_cert off;
-    max_down_retries_count 3;
+    max_down_retries 3;
 }
 
 server {
     listen                ${LISTENPORT};
+    charset utf-8;
 
     ssl                   ${SSL};
     ssl_certificate       ${CERTIFICATE};
@@ -26,24 +28,28 @@ server {
     proxy_set_header      X-Forwarded-Proto $scheme;
     port_in_redirect      off;
 
-    autoindex on;
-    autoindex_format ${LISTFORMAT};
 
     location / {
         root                        /data;
         client_body_temp_path       /tmp/uploads;
+
+        autoindex on;
+        autoindex_format ${LISTFORMAT};
+
+        create_full_put_path        on;
         dav_methods                 PUT DELETE MKCOL COPY MOVE;
         dav_ext_methods             PROPFIND OPTIONS;
-        create_full_put_path        on;
-        dav_access                  user:rw group:r all:r;
-        autoindex                   on;
+        dav_access                  user:rw group:rw all:rw;
+        min_delete_depth            ${MIN_DELETE_DEPTH};
+        # Disable uploading file size limit.
+        client_max_body_size        0;
 
-        limit_except GET PROPFIND OPTIONS{
-            auth_ldap               "LDAP Required";
+        ${LDAP_OPEN_METHODS}
+            auth_ldap               "${LDAP_AUTH_MESSAGE}";
             auth_ldap_servers       mainldapserver;
             allow                   ${TRUSTED_SUBNET};
             deny                    all;
-        }
+        ${LDAP_OPEN_METHODS_END}
 
         allow                       all;
     }
